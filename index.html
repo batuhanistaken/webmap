@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Web Haritası (Çankaya Puanlı Liseler Bilgi Sistemi)</title>
+    <!-- Leaflet CSS dosyası -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        #map {
+            height: 100vh; /* Sayfanın yüksekliğinin % 100'ü kadar olacak */
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Harita görüntülenecek div -->
+    <div id="map"></div>
+
+    <!-- Leaflet JavaScript dosyası -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Harita oluşturmak ve marker eklemek için JavaScript dosyası (yerel dosyadan) -->
+    <script src="js/osmtogeojson.js"></script>
+    <script>
+
+
+        // Harita genel görüş JavaScript kodu
+        var mymap = L.map('map').setView([39.8911, 32.7678], 12);  // Çankaya ilçesinin koordinatları
+
+
+        // Harita verilerini çekmek için bir tilelayer ekleyin (örneğin, OpenStreetMap)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+       }).addTo(mymap);
+
+        // Overpass API'den yol verilerini al
+        var roadOverpassUrl = 'https://overpass-api.de/api/interpreter?data=[out:json];(way["highway"](39.8041, 32.6445, 39.9788, 32.9075););out geom;';
+         fetch(roadOverpassUrl)
+        .then(response => response.json())
+        .then(data => {
+            var roadGeojsonLayer = L.geoJSON(osmtogeojson(data)).addTo(mymap);
+        });
+
+        // Lise 1'in konumu ve özellikleri
+        var schoolLocation = [39.87628, 32.8074];
+        var schoolPopupContent = "<b>Adı:</b> 	Ankara Fen Lisesi	<br>	<b>	Adres:	</b> 	Çiğdem Mahallesi, Odtü Ormanı 1557. Sk. No:32	<br>	<b>	Resmi Sitesi: 	</b> <a href='https://ankarafenlisesi.meb.k12.tr/' target='_blank'>https://ankarafenlisesi.meb.k12.tr/</a>	<br>	<b>	Taban Puanı: 	</b> 	494.5027	<br>	<b>	Kontenjanı: 	</b> 	120	<br>	<b>	Minimum Yüzdelik Dilim: 	</b> 	0.08	<br>	<b>	Eğitim Dili: 	</b> 	İngilizce <br>  <b>Fotoğrafı:</b> <img src='https://www.arkitektuel.com/wp-content/uploads/2019/12/ankara-fen-lisesi-yenileme-ek-bina-18.jpg' alt='Okul Fotoğrafı' style='max-width: 100%; height: auto;'>";
+
+        //Marker ekleyin ve tıklama kodu
+        var schoolMarker = L.marker(schoolLocation).addTo(mymap)
+            .bindPopup(schoolPopupContent)  // Marker'a tıklandığında gösterilecek içerik
+            //.openPopup();  // Sayfa açıldığında marker'ın açık olmasını sağlar
+            
+
+        //Lise 2'nin' konumu ve özellikleri
+        var schoolLocation = [39.85859,32.70052];
+        var schoolPopupContent = "<b>	Adı:	</b> 	Prof. Dr. Aziz Sancar Fen Lisesi	<br>	<b>	Adres:	</b> 	Alacaatlı Mahallesi, 3464 Cad. No:10/B	<br>	<b>	Resmi Sitesi: 	</b> <a href='https://azizsancarfenlisesi.meb.k12.tr/' target='_blank'>https://azizsancarfenlisesi.meb.k12.tr/</a>	<br>	<b>	Taban Puanı: 	</b> 	488.4034	<br>	<b>	Kontenjanı: 	</b> 	60	<br>	<b>	Minimum Yüzdelik Dilim: 	</b> 	0.53	<br>	<b>	Eğitim Dili: 	</b> 	İngilizce   <br>    <b>Fotoğrafı:</b> <img src='https://img.piri.net/resim/imagecrop/2022/01/24/10/50/resized_879d9-8755dee0kampc3bcs1.jpg' alt='Okul Fotoğrafı' style='max-width: 100%; height: auto;'>";
+
+        // Marker ekleyin ve tıklama kodu
+       var schoolMarker = L.marker(schoolLocation).addTo(mymap)
+            .bindPopup(schoolPopupContent)  // Marker'a tıklandığında gösterilecek içerik
+            //.openPopup();  // Sayfa açıldığında marker'ın açık olmasını sağlar
+
+
+        //Lise 3'ün konumu ve özellikleri
+        var schoolLocation = [39.91925,32.82234];
+        var schoolPopupContent = "<b>	Adı:	</b> 	Cumhuriyet Fen Lisesi	<br>	<b>	Adres:	</b> 	Emek Mahallesi, Kazakistan Caddesi 12. Sokak No:3	<br>	<b>	Resmi Sitesi: 	</b> <a href='https://cumhuriyetfenlisesi.meb.k12.tr/' target='_blank'>https://cumhuriyetfenlisesi.meb.k12.tr/</a>	<br>	<b>	Taban Puanı: 	</b> 	482.9061	<br>	<b>	Kontenjanı: 	</b> 	120	<br>	<b>	Minimum Yüzdelik Dilim: 	</b> 	1.02	<br>	<b>	Eğitim Dili: 	</b> 	İngilizce   <br><b>Fotoğrafı:</b> <img src='https://cumhuriyetfenlisesi.meb.k12.tr/meb_iys_dosyalar/06/06/757963/resimler/2016_06/k_08090420_okuld.jpg' alt='Okul Fotoğrafı' style='max-width: 100%; height: auto;'>";
+
+        // Marker ekleyin ve tıklama kodu
+       var schoolMarker = L.marker(schoolLocation).addTo(mymap)
+            .bindPopup(schoolPopupContent)  // Marker'a tıklandığında gösterilecek içerik
+            //.openPopup();  // Sayfa açıldığında marker'ın açık olmasını sağlar
+
+
+        //Lise 4'ün konumu ve özellikleri
+        var schoolLocation = [39.8659,32.7136];
+        var schoolPopupContent = "<b>	Adı:	</b> 	Gazi Anadolu Lisesi	<br>	<b>	Adres:	</b> 	Beytepe Mahallesi, Hitit Blv. No:2	<br>	<b>	Resmi Sitesi: 	</b> <a href='https://gazianadolu.meb.k12.tr/' target='_blank'>https://gazianadolu.meb.k12.tr/</a>	<br>	<b>	Taban Puanı: 	</b> 	471.2336	<br>	<b>	Kontenjanı: 	</b> 	360	<br>	<b>	Minimum Yüzdelik Dilim: 	</b> 	2.86	<br>	<b>	Eğitim Dili: 	</b> 	İngilizce   <br><b>Fotoğrafı:</b> <img src='https://aurads.com/wp-content/uploads/2022/02/gazianadolu07-1.jpg' alt='Okul Fotoğrafı' style='max-width: 100%; height: auto;'>";
+
+        // Marker ekleyin ve tıklama kodu
+       var schoolMarker = L.marker(schoolLocation).addTo(mymap)
+            .bindPopup(schoolPopupContent)  // Marker'a tıklandığında gösterilecek içerik
+            //.openPopup();  // Sayfa açıldığında marker'ın açık olmasını sağlar            
+
+
+        //Lise 5'in konumu ve özellikleri
+        var schoolLocation = [39.88287,32.84139];
+        var schoolPopupContent = "<b>	Adı:	</b> 	Mehmet Emin Resulzade Anadolu Lisesi	<br>	<b>	Adres:	</b> 	İlkadım Mahallesi, Namdar Sokak No2 Dikmençankaya/Ankara	<br>	<b>	Resmi Sitesi: 	</b> <a href='https://mehmeteminresulzadeal.meb.k12.tr/' target='_blank'>https://mehmeteminresulzadeal.meb.k12.tr/</a>	<br>	<b>	Taban Puanı: 	</b> 	469.3785	<br>	<b>	Kontenjanı: 	</b> 	180	<br>	<b>	Minimum Yüzdelik Dilim: 	</b> 	3.05	<br>	<b>	Eğitim Dili: 	</b> 	İngilizce   <br><b>Fotoğrafı:</b> <img src='https://mehmeteminresulzadeal.meb.k12.tr/meb_iys_dosyalar/06/06/300159/resimler/2022_03/k_25124027_OKUL-FOTO.jpg' alt='Okul Fotoğrafı' style='max-width: 100%; height: auto;'>";
+
+        // Marker ekleyin ve tıklama kodu
+       var schoolMarker = L.marker(schoolLocation).addTo(mymap)
+            .bindPopup(schoolPopupContent)  // Marker'a tıklandığında gösterilecek içerik
+            //.openPopup();  // Sayfa açıldığında marker'ın açık olmasını sağlar
+
+
+        //Lise 6'nın konumu ve özellikleri
+        var schoolLocation = [39.92667,32.85029];
+        var schoolPopupContent = "<b>	Adı:	</b> 	Ankara Atatürk Lisesi	<br>	<b>	Adres:	</b> 	Korkutreis Mahallesi, Sezenler sk. no:11	<br>	<b>	Resmi Sitesi: 	</b> <a href='https://ankaraataturklisesi.meb.k12.tr/' target='_blank'>https://ankaraataturklisesi.meb.k12.tr/</a>	<br>	<b>	Taban Puanı: 	</b> 	471.1355	<br>	<b>	Kontenjanı: 	</b> 	240	<br>	<b>	Minimum Yüzdelik Dilim: 	</b> 	2.86	<br>	<b>	Eğitim Dili: 	</b> 	İngilizce   <br><b>Fotoğrafı:</b> <img src='https://ankaraataturklisesi.meb.k12.tr/meb_iys_dosyalar/06/06/119556/resimler/2019_08/k_13005654_IMG_20190724_094822.jpg' alt='Okul Fotoğrafı' style='max-width: 100%; height: auto;'>";
+
+        // Marker ekleyin ve tıklama kodu
+       var schoolMarker = L.marker(schoolLocation).addTo(mymap)
+            .bindPopup(schoolPopupContent)  // Marker'a tıklandığında gösterilecek içerik
+            //.openPopup();  // Sayfa açıldığında marker'ın açık olmasını sağlar             
+
+            
+        //Lise 8'in konumu ve özellikleri
+        var schoolLocation = [39.90570,32.81864];
+        var schoolPopupContent = "<b>	Adı:	</b> 	Dr.Binnaz Ege - Dr.Rıdvan Ege Anadolu Lisesi	<br>	<b>	Adres:	</b> 	Oğuzlar Mahallesi, Osmanlı cd. 1396. sokak no :2	<br>	<b>	Resmi Sitesi: 	</b> <a href='https://drbinnazridvanegeal.meb.k12.tr/' target='_blank'>https://drbinnazridvanegeal.meb.k12.tr/</a>	<br>	<b>	Taban Puanı: 	</b> 	466.2393	<br>	<b>	Kontenjanı: 	</b> 	180	<br>	<b>	Minimum Yüzdelik Dilim: 	</b> 	3.60	<br>	<b>	Eğitim Dili: 	</b> 	İngilizce   <br><b>Fotoğrafı:</b> <img src='https://lh3.googleusercontent.com/p/AF1QipPfiJK6vIvz3uTgkbA6h_GIHLK_Yr-cqY32Zic9=w1080-h608-p-no-v0' alt='Okul Fotoğrafı' style='max-width: 100%; height: auto;'>";
+
+        // Marker ekleyin ve tıklama kodu
+       var schoolMarker = L.marker(schoolLocation).addTo(mymap)
+            .bindPopup(schoolPopupContent)  // Marker'a tıklandığında gösterilecek içerik
+            //.openPopup();  // Sayfa açıldığında marker'ın açık olmasını sağlar
+
+            
+        //Lise 9'un konumu ve özellikleri
+        var schoolLocation = [39.89194,32.84776];
+        var schoolPopupContent = "<b>	Adı:	</b> 	Hacı Ömer Tarman Anadolu Lisesi	<br>	<b>	Adres:	</b> 	Aziziye Mahallesi, Şht. Mahir Turan sokak no:2	<br>	<b>	Resmi Sitesi: 	</b> <a href='https://hotal.meb.k12.tr/' target='_blank'>https://hotal.meb.k12.tr/</a>	<br>	<b>	Taban Puanı: 	</b> 	461.9643	<br>	<b>	Kontenjanı: 	</b> 	120	<br>	<b>	Minimum Yüzdelik Dilim: 	</b> 	4.39	<br>	<b>	Eğitim Dili: 	</b> 	İngilizce <br><b>Fotoğrafı:</b> <img src='https://www.sorubak.com/images/teog/503.jpg' alt='Okul Fotoğrafı' style='max-width: 100%; height: auto;'>";
+
+        // Marker ekleyin ve tıklama kodu
+       var schoolMarker = L.marker(schoolLocation).addTo(mymap)
+            .bindPopup(schoolPopupContent)  // Marker'a tıklandığında gösterilecek içerik
+            //.openPopup();  // Sayfa açıldığında marker'ın açık olmasını sağlar   
+
+            
+        //Lise 10'un konumu ve özellikleri
+        var schoolLocation = [39.88836,32.84734];
+        var schoolPopupContent = "<b>	Adı:	</b> 	Ayrancı Anadolu Lisesi	<br>	<b>	Adres:	</b> 	Aziziye, Hoşdere Cd. No:139, 06690 Çankaya/Ankara	<br>	<b>	Resmi Sitesi: 	</b> <a href='https://ayrancianadolu.meb.k12.tr/' target='_blank'>https://ayrancianadolu.meb.k12.tr/</a>	<br>	<b>	Taban Puanı: 	</b> 	455.6768	<br>	<b>	Kontenjanı: 	</b> 	150	<br>	<b>	Minimum Yüzdelik Dilim: 	</b> 	5.51	<br>	<b>	Eğitim Dili: 	</b> 	İngilizce   <br><b>Fotoğrafı:</b> <img src='https://www.bizimkolej.com/upload/kurum/5339.jpg' alt='Okul Fotoğrafı' style='max-width: 100%; height: auto;'>";
+
+        // Marker ekleyin ve tıklama kodu
+       var schoolMarker = L.marker(schoolLocation).addTo(mymap)
+            .bindPopup(schoolPopupContent)  // Marker'a tıklandığında gösterilecek içerik
+            //.openPopup();  // Sayfa açıldığında marker'ın açık olmasını sağlar 
+
+            
+        //Lise 11'in konumu ve özellikleri
+        var schoolLocation = [39.89090,32.87668];
+        var schoolPopupContent = "<b>	Adı:	</b> 	Betül Can Anadolu Lisesi	<br>	<b>	Adres:	</b> 	 Çankaya, Büyükesat Mh., Koza Sok. No:46, Gaziosmanpaşa, 06700 Ankara	<br>	<b>	Resmi Sitesi: 	</b> <a href='https://betulcananadolulisesi.meb.k12.tr/' target='_blank'>https://betulcananadolulisesi.meb.k12.tr/</a>	<br>	<b>	Taban Puanı: 	</b> 	452.0240	<br>	<b>	Kontenjanı: 	</b> 	180	<br>	<b>	Minimum Yüzdelik Dilim: 	</b> 	6.20	<br>	<b>	Eğitim Dili: 	</b> 	İngilizce   <br><b>Fotoğrafı:</b> <img src='https://www.bizimkolej.com/upload/kurum/5353.jpg' alt='Okul Fotoğrafı' style='max-width: 100%; height: auto;'>";
+
+        // Marker ekleyin ve tıklama kodu
+       var schoolMarker = L.marker(schoolLocation).addTo(mymap)
+            .bindPopup(schoolPopupContent)  // Marker'a tıklandığında gösterilecek içerik
+            //.openPopup();  // Sayfa açıldığında marker'ın açık olmasını sağlar
+
+            
+        //Lise 12'nin konumu ve özellikleri
+        var schoolLocation = [39.87165,32.83226];
+        var schoolPopupContent = "<b>	Adı:	</b> 	Ayhan Sümer Anadolu Lisesi	<br>	<b>	Adres:	</b> 	Malazgirt, Malazgirt 931.Sokak, Dikmen Cd No:137, 06450 Çankaya/Ankara	<br>	<b>	Resmi Sitesi: 	</b> <a href='https://ayhansumeranadolu.meb.k12.tr/' target='_blank'>https://ayhansumeranadolu.meb.k12.tr/</a>	<br>	<b>	Taban Puanı: 	</b> 	448.0830	<br>	<b>	Kontenjanı: 	</b> 	120	<br>	<b>	Minimum Yüzdelik Dilim: 	</b> 	6.88	<br>	<b>	Eğitim Dili: 	</b> 	İngilizce   <br><b>Fotoğrafı:</b> <img src='https://lh3.googleusercontent.com/p/AF1QipMKKll5wGFMFJ7DPw6_l3L4YArZ5ioVZ3bhgKzY=w1080-h608-p-k-no-v0' alt='Okul Fotoğrafı' style='max-width: 100%; height: auto;'>";
+
+        // Marker ekleyin ve tıklama kodu
+       var schoolMarker = L.marker(schoolLocation).addTo(mymap)
+            .bindPopup(schoolPopupContent)  // Marker'a tıklandığında gösterilecek içerik
+            //.openPopup();  // Sayfa açıldığında marker'ın açık olmasını sağlar
+
+
+        //Lise 13'ün konumu ve özellikleri
+        var schoolLocation = [39.89627,32.69856];
+        var schoolPopupContent = "<b>	Adı:	</b> 	Ümitköy Anadolu Lisesi	<br>	<b>	Adres:	</b> 	Ümit, 2483. Cd. No:29, 06810 Çankaya/Ankara	<br>	<b>	Resmi Sitesi: 	</b> <a href='https://umitkoyanadolulisesi.meb.k12.tr/' target='_blank'>https://umitkoyanadolulisesi.meb.k12.tr/</a>	<br>	<b>	Taban Puanı: 	</b> 	446.9965	<br>	<b>	Kontenjanı: 	</b> 	180	<br>	<b>	Minimum Yüzdelik Dilim: 	</b> 	7.06	<br>	<b>	Eğitim Dili: 	</b> 	İngilizce   <br><b>Fotoğrafı:</b> <img src='https://www.sorubak.com/images/teog/509.jpg' alt='Okul Fotoğrafı' style='max-width: 100%; height: auto;'>";
+
+        // Marker ekleyin ve tıklama kodu
+       var schoolMarker = L.marker(schoolLocation).addTo(mymap)
+            .bindPopup(schoolPopupContent)  // Marker'a tıklandığında gösterilecek içerik
+            //.openPopup();  // Sayfa açıldığında marker'ın açık olmasını sağlar  
+
+            
+        //Lise 14'ün konumu ve özellikleri
+        var schoolLocation = [39.88948,32.70556];
+        var schoolPopupContent = "<b>	Adı:	</b> 	Ankara Türk Telekom Sosyal Bilimler Lisesi	<br>	<b>	Adres:	</b> 	Mutlukent, 1, 1919. Sk., 06800 Çankaya/Ankara	<br>	<b>	Resmi Sitesi: 	</b> <a href='https://asbl.meb.k12.tr/' target='_blank'>https://asbl.meb.k12.tr/</a>	<br>	<b>	Taban Puanı: 	</b> 	428.6547	<br>	<b>	Kontenjanı: 	</b> 	120	<br>	<b>	Minimum Yüzdelik Dilim: 	</b> 	10.29	<br>	<b>	Eğitim Dili: 	</b> 	İngilizce   <br><b>Fotoğrafı:</b> <img src='https://asbl.meb.k12.tr/meb_iys_dosyalar/06/06/970707/resimler/2012_12/k_24114809_02032012060.jpg' alt='Okul Fotoğrafı' style='max-width: 100%; height: auto;'>";
+
+        // Marker ekleyin ve tıklama kodu
+       var schoolMarker = L.marker(schoolLocation).addTo(mymap)
+            .bindPopup(schoolPopupContent)  // Marker'a tıklandığında gösterilecek içerik
+            //.openPopup();  // Sayfa açıldığında marker'ın açık olmasını sağlar  
+            
+            
+        //Lise 15'in konumu ve özellikleri
+        var schoolLocation = [39.86186,32.67794];
+        var schoolPopupContent = "<b>	Adı:	</b> 	Ümitköy Anadolu İmam Hatip Lisesi	<br>	<b>	Adres:	</b> 	Alacaatlı, 3354/1. Sk No:6, 06810 Çankaya/Ankara	<br>	<b>	Resmi Sitesi: 	</b> <a href='https://umitkoy.meb.k12.tr/' target='_blank'>https://umitkoy.meb.k12.tr/</a>	<br>	<b>	Taban Puanı: 	</b> 	363.1141	<br>	<b>	Kontenjanı: 	</b> 	60	<br>	<b>	Minimum Yüzdelik Dilim: 	</b> 	22.73	<br>	<b>	Eğitim Dili: 	</b> 	İngilizce   <br><b>Fotoğrafı:</b> <img src='https://www.bizimkolej.com/upload/kurum/cankaya-umitkoy-anadolu-imam-hatip-lisesi-5531.jpg' alt='Okul Fotoğrafı' style='max-width: 100%; height: auto;'>";
+
+        // Marker ekleyin ve tıklama kodu
+       var schoolMarker = L.marker(schoolLocation).addTo(mymap)
+            .bindPopup(schoolPopupContent)  // Marker'a tıklandığında gösterilecek içerik
+            //.openPopup();  // Sayfa açıldığında marker'ın açık olmasını sağlar 
+
+
+        //Lise 16'nın konumu ve özellikleri
+        var schoolLocation = [39.85659,32.84780];
+        var schoolPopupContent = "<b>	Adı:	</b> 	Tapu Kadastro Mesleki Ve Teknik Anadolu Lisesi	<br>	<b>	Adres:	</b> 	Ukarı Dikmen, 648. Cd (18. Cd.) No:53, 06450 Çankaya/Ankara	<br>	<b>	Resmi Sitesi: 	</b> <a href='https://tapukadastro.meb.k12.tr/' target='_blank'>https://tapukadastro.meb.k12.tr/</a>	<br>	<b>	Taban Puanı: 	</b> 	301.0032	<br>	<b>	Kontenjanı: 	</b> 	60	<br>	<b>	Minimum Yüzdelik Dilim: 	</b> 	39.37	<br>	<b>	Eğitim Dili: 	</b> 	İngilizce   <br><b>Fotoğrafı:</b> <img src='https://tapukadastro.meb.k12.tr/meb_iys_dosyalar/06/06/965041/resimler/2013_02/k_17120638_tapukadastroanadolumesleklisesi.jpg' alt='Okul Fotoğrafı' style='max-width: 100%; height: auto;'>";
+
+        // Marker ekleyin ve tıklama kodu
+       var schoolMarker = L.marker(schoolLocation).addTo(mymap)
+            .bindPopup(schoolPopupContent)  // Marker'a tıklandığında gösterilecek içerik
+            //.openPopup();  // Sayfa açıldığında marker'ın açık olmasını sağlar  
+            
+            
+        //Lise 17'nin konumu ve özellikleri
+        var schoolLocation = [39.89725,32.70431];
+        var schoolPopupContent = "<b>	Adı:	</b> 	Türk Telekom Mesleki Ve Teknik Anadolu Lisesi	<br>	<b>	Adres:	</b> 	Ümit, 2432. Cd. No:42, 06810 Çankaya/Ankara	<br>	<b>	Resmi Sitesi: 	</b> 	https://turktelekomeml.meb.k12.tr/	<br>	<b>	Taban Puanı: 	</b> 	300.8810	<br>	<b>	Kontenjanı: 	</b> 	30	<br>	<b>	Minimum Yüzdelik Dilim: 	</b> 	39.40	<br>	<b>	Eğitim Dili: 	</b> 	İngilizce   <br><b>Fotoğrafı:</b> <img src='https://turktelekomeml26.meb.k12.tr//meb_iys_dosyalar/26/14/967490/resimler/2015_10/k_24231222_img_9850.jpg' alt='Okul Fotoğrafı' style='max-width: 100%; height: auto;'>";
+
+        // Marker ekleyin ve tıklama kodu
+       var schoolMarker = L.marker(schoolLocation).addTo(mymap)
+            .bindPopup(schoolPopupContent)  // Marker'a tıklandığında gösterilecek içerik
+            //.openPopup();  // Sayfa açıldığında marker'ın açık olmasını sağlar
+            
+            
+        //Lise 18'in konumu ve özellikleri
+        var schoolLocation = [39.87565,32.69311];
+        var schoolPopupContent = "<b>	Adı:	</b> 	Ümitköy Kız Anadolu İmam Hatip Lisesi	<br>	<b>	Adres:	</b> 	Çayyolu Mah. Seyfi Saltoğlu Bulvarı, 2713. Sk. No:7, 06860 Çankaya/Ankara	<br>	<b>	Resmi Sitesi: 	</b> <a href='https://turktelekomeml.meb.k12.tr/' target='_blank'>https://turktelekomeml.meb.k12.tr/</a>	<br>	<b>	Taban Puanı: 	</b> 	304.7812	<br>	<b>	Kontenjanı: 	</b> 	90	<br>	<b>	Minimum Yüzdelik Dilim: 	</b> 	38.16	<br>	<b>	Eğitim Dili: 	</b> 	İngilizce   <br><b>Fotoğrafı:</b> <img src='https://umitkoykizaihl.meb.k12.tr/meb_iys_dosyalar/06/06/764671/resimler/2020_08/k_20195301_1_okul.jpg' alt='Okul Fotoğrafı' style='max-width: 100%; height: auto;'>";
+
+        // Marker ekleyin ve tıklama kodu
+       var schoolMarker = L.marker(schoolLocation).addTo(mymap)
+            .bindPopup(schoolPopupContent)  // Marker'a tıklandığında gösterilecek içerik
+            //.openPopup();  // Sayfa açıldığında marker'ın açık olmasını sağlar  
+            
+            
+        //Lise 19'un konumu ve özellikleri
+        var schoolLocation = [39.89622,32.79470];
+        var schoolPopupContent = "<b>	Adı:	</b> 	Borsa İstanbul Mehmet Akif Ersoy Mesleki Ve Teknik Anadolu Lisesi (Laboratuvar Hizmetleri Alanı)	<br>	<b>	Adres:	</b> 	İşçi Blokları Mahallesi 1538. Cadde No27 Çankaya / Ankara	<br>	<b>	Resmi Sitesi: 	</b> <a href='https://imkbmehmetakifersoymtal.meb.k12.tr/' target='_blank'>https://imkbmehmetakifersoymtal.meb.k12.tr/</a>	<br>	<b>	Taban Puanı: 	</b> 	273.8670	<br>	<b>	Kontenjanı: 	</b> 	30	<br>	<b>	Minimum Yüzdelik Dilim: 	</b> 	48.96	<br>	<b>	Eğitim Dili: 	</b> 	İngilizce   <br><b>Fotoğrafı:</b> <img src='https://i.ytimg.com/vi/CzIDbvmrp6I/maxresdefault.jpg' alt='Okul Fotoğrafı' style='max-width: 100%; height: auto;'>";
+
+        // Marker ekleyin ve tıklama kodu
+       var schoolMarker = L.marker(schoolLocation).addTo(mymap)
+            .bindPopup(schoolPopupContent)  // Marker'a tıklandığında gösterilecek içerik
+            //.openPopup();  // Sayfa açıldığında marker'ın açık olmasını sağlar 
+            
+            
+        //Lise 20'nin konumu ve özellikleri
+        var schoolLocation = [39.90513,32.81378];
+        var schoolPopupContent = "<b>	Adı:	</b> 	Özel Harekat Şehitleri Anadolu İmam Hatip Lisesi	<br>	<b>	Adres:	</b> 	Kızılırmak Mah. Mevlana Bulvarı Metin Gören Cad. No15 Çankaya/Ankara	<br>	<b>	Resmi Sitesi: 	</b> <a href='https://ozelharekatsehitleriaihl.meb.k12.tr/' target='_blank'>https://ozelharekatsehitleriaihl.meb.k12.tr/</a>	<br>	<b>	Taban Puanı: 	</b> 	295.7325	<br>	<b>	Kontenjanı: 	</b> 	90	<br>	<b>	Minimum Yüzdelik Dilim: 	</b> 	41.14	<br>	<b>	Eğitim Dili: 	</b> 	İngilizce   <br><b>Fotoğrafı:</b> <img src='https://ozelharekatsehitleriaihl.meb.k12.tr/meb_iys_dosyalar/06/06/762142/resimler/2020_05/k_22145458_WhatsApp_Image_2019-11-21_at_13.57.08.jpg' alt='Okul Fotoğrafı' style='max-width: 100%; height: auto;'>";
+
+        // Marker ekleyin ve tıklama kodu
+       var schoolMarker = L.marker(schoolLocation).addTo(mymap)
+            .bindPopup(schoolPopupContent)  // Marker'a tıklandığında gösterilecek içerik
+            //.openPopup();  // Sayfa açıldığında marker'ın açık olmasını sağlar 
+            
+            
+        //Lise 21'in konumu ve özellikleri
+        var schoolLocation = [39.89260,32.82042];
+        var schoolPopupContent = "<b>	Adı:	</b> 	Balgat Mesleki Ve Teknik Anadolu Lisesi (Endüstriyel Otomasyon Teknolojileri Alanı)	<br>	<b>	Adres:	</b> 	Yukarı Öveçler, Cevizlidere Cd. No13, 06520 Çankaya/Ankara	<br>	<b>	Resmi Sitesi: 	</b> <a href='https://balgateml.meb.k12.tr/' target='_blank'>https://balgateml.meb.k12.tr/</a>	<br>	<b>	Taban Puanı: 	</b> 	270.4689	<br>	<b>	Kontenjanı: 	</b> 	30	<br>	<b>	Minimum Yüzdelik Dilim: 	</b> 	50.44	<br>	<b>	Eğitim Dili: 	</b> 	İngilizce   <br><b>Fotoğrafı:</b> <img src='https://balgateml.meb.k12.tr/meb_iys_dosyalar/06/06/119676/resimler/2021_03/15124802_NDRC5588.jpg' alt='Okul Fotoğrafı' style='max-width: 100%; height: auto;'>";
+
+        // Marker ekleyin ve tıklama kodu
+       var schoolMarker = L.marker(schoolLocation).addTo(mymap)
+            .bindPopup(schoolPopupContent)  // Marker'a tıklandığında gösterilecek içerik
+            //.openPopup();  // Sayfa açıldığında marker'ın açık olmasını sağlar  
+            
+                        
+        //Lise 22'nin konumu ve özellikleri
+        var schoolLocation = [39.83741,32.70078];
+        var schoolPopupContent = "<b>	Adı:	</b> 	Nurten Uşan Anadolu İmam Hatip Lisesi	<br>	<b>	Adres:	</b> 	Alacaatlı Mh. Mohaç Cd, 3341. Sk, 06810 Çankaya/Ankara	<br>	<b>	Resmi Sitesi: 	</b> <a href='https://nurtenusanaihl.meb.k12.tr/' target='_blank'>https://nurtenusanaihl.meb.k12.tr/</a>	<br>	<b>	Taban Puanı: 	</b> 	198.6926	<br>	<b>	Kontenjanı: 	</b> 	40	<br>	<b>	Minimum Yüzdelik Dilim: 	</b> 	90.14	<br>	<b>	Eğitim Dili: 	</b> 	İngilizce   <br><b>Fotoğrafı:</b> <img src='https://img.piri.net/resim/imagecrop/2020/07/27/09/15/resized_7cb57-67c83086ihl.jpg' alt='Okul Fotoğrafı' style='max-width: 100%; height: auto;'>";
+
+
+        // Marker ekleyin ve tıklama kodu
+       var schoolMarker = L.marker(schoolLocation).addTo(mymap)
+            .bindPopup(schoolPopupContent)  // Marker'a tıklandığında gösterilecek içerik
+            //.openPopup();  // Sayfa açıldığında marker'ın açık olmasını sağlar  
+            
+            
+        //Lise 23'ün konumu ve özellikleri
+        var schoolLocation = [39.89400,32.82273];
+        var schoolPopupContent = "<b>	Adı:	</b> 	Çankaya Borsa İstanbul Mesleki Ve Teknik Anadolu (Lisesi Yiyecek İçecek Hizmetleri Alanı)	<br>	<b>	Adres:	</b> 	Yukarı Öveçler, 1289. Sk. No:2, 06460 Çankaya/Ankara	<br>	<b>	Resmi Sitesi: 	</b> <a href='https://cankayaborsaistanbulmtal.meb.k12.tr/' target='_blank'>https://cankayaborsaistanbulmtal.meb.k12.tr/</a>	<br>	<b>	Taban Puanı: 	</b> 	212.9303	<br>	<b>	Kontenjanı: 	</b> 	90	<br>	<b>	Minimum Yüzdelik Dilim: 	</b> 	81.34	<br>	<b>	Eğitim Dili: 	</b> 	İngilizce   <br><b>Fotoğrafı:</b> <img src='https://cankayaborsaistanbulmtal.meb.k12.tr//meb_iys_dosyalar/06/06/888317/resimler/2017_11/k_03153705_okulgenelbakis.jpg' alt='Okul Fotoğrafı' style='max-width: 100%; height: auto;'>";
+
+        // Marker ekleyin ve tıklama kodu
+       var schoolMarker = L.marker(schoolLocation).addTo(mymap)
+            .bindPopup(schoolPopupContent)  // Marker'a tıklandığında gösterilecek içerik
+            //.openPopup();  // Sayfa açıldığında marker'ın açık olmasını sağlar  
+            
+            
+        //Lise 24'ün konumu ve özellikleri
+        var schoolLocation = [39.89260,32.82042];
+        var schoolPopupContent = "<b>	Adı:	</b> 	Balgat Mesleki Ve Teknik Anadolu Lisesi (Elektrik Elektronik Teknolojisi Alanı)	<br>	<b>	Adres:	</b> 	Yukarıöveçler Mah. Cevizlidere Cad. No13, Balgat Çankaya /Ankara	<br>	b>	Resmi Sitesi: 	</b> <a href='https://balgateml.meb.k12.tr/' target='_blank'>https://balgateml.meb.k12.tr/</a>	<br>	<b>	Taban Puanı: 	</b> 	276.8039	<br>	<b>	Kontenjanı: 	</b> 	30	<br>	<b>	Minimum Yüzdelik Dilim: 	</b> 	47.93	<br>	<b>	Eğitim Dili: 	</b> 	İngilizce   <br><b>Fotoğrafı:</b> <img src='https://balgateml.meb.k12.tr/meb_iys_dosyalar/06/06/119676/resimler/2019_10/k_30115454_29EKYM2.jpg' alt='Okul Fotoğrafı' style='max-width: 100%; height: auto;'>";
+
+        // Marker ekleyin ve tıklama kodu
+       var schoolMarker = L.marker(schoolLocation).addTo(mymap)
+            .bindPopup(schoolPopupContent)  // Marker'a tıklandığında gösterilecek içerik
+            //.openPopup();  // Sayfa açıldığında marker'ın açık olmasını sağlar              
+    </script>
+</body>
+</html>
+        
